@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roast My Portfolio — For Brave Designers Only</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #191919;
+      --border: #222222;
+      --red: #FF3B3B;
+      --orange: #FF6B35;
+      --gold: #FFD60A;
+      --green: #00C853;
+      --text: #F0EDE8;
+      --muted: #888880;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Space Grotesk', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NOISE TEXTURE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 8, 8, 0.85);
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--red); }
+
+    .nav-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before,
+    .hero-eyebrow::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: var(--red);
+      opacity: 0.5;
+    }
+
+    .hero-title {
+      font-size: clamp(52px, 10vw, 120px);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      margin-bottom: 32px;
+    }
+
+    .hero-title .fire { color: var(--red); }
+    .hero-title .line2 { display: block; color: var(--muted); font-weight: 300; }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.6;
+      margin-bottom: 56px;
+    }
+
+    .hero-sub strong { color: var(--text); font-weight: 500; }
+
+    /* INPUT */
+    .input-wrap {
+      width: 100%;
+      max-width: 620px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .url-row {
+      display: flex;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .url-row:focus-within {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(255, 59, 59, 0.12);
+    }
+
+    .url-prefix {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--muted);
+      padding: 18px 16px;
+      background: var(--surface2);
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    #url-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      padding: 18px 20px;
+    }
+
+    #url-input::placeholder { color: var(--muted); }
+
+    #roast-btn {
+      margin-top: 0;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 16px 36px;
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.01em;
+      width: 100%;
+    }
+
+    #roast-btn:hover { background: #ff5555; transform: translateY(-1px); box-shadow: 0 8px 32px rgba(255, 59, 59, 0.3); }
+    #roast-btn:active { transform: translateY(0); }
+    #roast-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .disclaimer {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* AGENTS PREVIEW */
+    .agents-preview {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 56px;
+      flex-wrap: wrap;
+    }
+
+    .agent-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .agent-pill .emoji { font-size: 14px; }
+
+    /* SCANNING */
+    #scanning {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 40px;
+      padding: 120px 24px;
+    }
+
+    .scan-title {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .scan-url {
+      font-family: var(--mono);
+      font-size: 18px;
+      color: var(--red);
+      word-break: break-all;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .scan-agents {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .scan-agent-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .scan-agent-row .avatar {
+      font-size: 24px;
+      width: 40px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .scan-agent-info { flex: 1; }
+
+    .scan-agent-name {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .scan-bar-wrap {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .scan-bar {
+      height: 100%;
+      background: var(--red);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .scan-status {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      width: 70px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .scan-log {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      min-height: 20px;
+    }
+
+    /* RESULTS */
+    #results {
+      display: none;
+      padding: 100px 24px 80px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .results-header h2 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .results-url-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .results-url-badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* AGENT CARDS */
+    .agent-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .agent-card.visible { opacity: 1; transform: translateY(0); }
+
+    .agent-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 24px 24px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .agent-identity { display: flex; gap: 16px; align-items: flex-start; flex: 1; }
+
+    .agent-avatar {
+      font-size: 36px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .agent-name {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .agent-title {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .agent-bio {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      line-height: 1.4;
+      max-width: 380px;
+    }
+
+    .grade-badge {
+      flex-shrink: 0;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 700;
+      border: 2px solid transparent;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .grade-A { background: rgba(0, 200, 83, 0.15); border-color: var(--green); color: var(--green); }
+    .grade-B { background: rgba(255, 214, 10, 0.12); border-color: var(--gold); color: var(--gold); }
+    .grade-C { background: rgba(255, 107, 53, 0.12); border-color: var(--orange); color: var(--orange); }
+    .grade-D { background: rgba(255, 59, 59, 0.1); border-color: var(--red); color: var(--red); }
+    .grade-F { background: rgba(255, 59, 59, 0.2); border-color: var(--red); color: var(--red); box-shadow: 0 0 20px rgba(255, 59, 59, 0.3); }
+
+    .agent-card-body { padding: 24px; }
+
+    .roast-text {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+
+    .roast-text::before { content: '" '; color: var(--red); font-style: normal; font-size: 20px; line-height: 0; vertical-align: -4px; }
+    .roast-text::after { content: ' "'; color: var(--red); font-style: normal; font-size: 20px; line-height: 0; vertical-align: -4px; }
+
+    .compliment-section {
+      background: rgba(0, 200, 83, 0.05);
+      border: 1px solid rgba(0, 200, 83, 0.15);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .compliment-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+    .compliment-text {
+      font-size: 13px;
+      color: rgba(0, 200, 83, 0.9);
+      line-height: 1.5;
+    }
+
+    /* OVERALL VERDICT */
+    .verdict-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+      margin-top: 40px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .verdict-card.visible { opacity: 1; transform: translateY(0); }
+
+    .verdict-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .overall-grade {
+      font-family: var(--mono);
+      font-size: 96px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .verdict-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .verdict-sub {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 400px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--muted); background: var(--surface2); }
+
+    .btn-primary {
+      background: var(--red);
+      border: 1px solid var(--red);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover { background: #ff5555; transform: translateY(-1px); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    footer a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border); }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: transform 0.3s;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .hero-title { font-size: 48px; }
+      .agent-card-header { flex-direction: column; }
+      .grade-badge { align-self: flex-end; margin-top: -48px; }
+      .verdict-card { padding: 32px 24px; }
+      .overall-grade { font-size: 72px; }
+      .agents-preview { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ROAST<span>.</span>FOLIO</div>
+  <div class="nav-badge">🔥 Designer Accountability Tool</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-eyebrow">For product & brand designers</div>
+
+  <h1 class="hero-title">
+    <span class="fire">Roast</span><br>
+    <span class="line2">My Portfolio</span>
+  </h1>
+
+  <p class="hero-sub">
+    Drop your portfolio URL and let <strong>five highly qualified critics</strong> destroy — and occasionally celebrate — your life's work. Thick skin required.
+  </p>
+
+  <div class="input-wrap">
+    <div class="url-row">
+      <span class="url-prefix">https://</span>
+      <input type="text" id="url-input" placeholder="yourportfolio.com" autocomplete="off" spellcheck="false" />
+    </div>
+    <button id="roast-btn" onclick="startRoast()">🔥 Roast My Portfolio</button>
+    <p class="disclaimer">No actual feelings will be harmed. Probably.</p>
+  </div>
+
+  <div class="agents-preview">
+    <div class="agent-pill"><span class="emoji">👩‍💼</span> Miranda, ECD</div>
+    <div class="agent-pill"><span class="emoji">🚀</span> Chad, YC</div>
+    <div class="agent-pill"><span class="emoji">🏢</span> Jennifer, FAANG</div>
+    <div class="agent-pill"><span class="emoji">💸</span> Marco, CEO</div>
+    <div class="agent-pill"><span class="emoji">👵</span> Grandma Ethel</div>
+  </div>
+</section>
+
+<!-- SCANNING -->
+<section id="scanning">
+  <div class="scan-title">Assembling the panel...</div>
+  <div class="scan-url" id="scan-url-display"></div>
+
+  <div class="scan-agents">
+    <div class="scan-agent-row">
+      <div class="avatar">👩‍💼</div>
+      <div class="scan-agent-info">
+        <div class="scan-agent-name">Miranda Blackwood</div>
+        <div class="scan-bar-wrap"><div class="scan-bar" id="bar-0"></div></div>
+      </div>
+      <div class="scan-status" id="status-0">Waiting...</div>
+    </div>
+    <div class="scan-agent-row">
+      <div class="avatar">🚀</div>
+      <div class="scan-agent-info">
+        <div class="scan-agent-name">Chad Kessler</div>
+        <div class="scan-bar-wrap"><div class="scan-bar" id="bar-1"></div></div>
+      </div>
+      <div class="scan-status" id="status-1">Waiting...</div>
+    </div>
+    <div class="scan-agent-row">
+      <div class="avatar">🏢</div>
+      <div class="scan-agent-info">
+        <div class="scan-agent-name">Jennifer Park</div>
+        <div class="scan-bar-wrap"><div class="scan-bar" id="bar-2"></div></div>
+      </div>
+      <div class="scan-status" id="status-2">Waiting...</div>
+    </div>
+    <div class="scan-agent-row">
+      <div class="avatar">💸</div>
+      <div class="scan-agent-info">
+        <div class="scan-agent-name">Marco Santos</div>
+        <div class="scan-bar-wrap"><div class="scan-bar" id="bar-3"></div></div>
+      </div>
+      <div class="scan-status" id="status-3">Waiting...</div>
+    </div>
+    <div class="scan-agent-row">
+      <div class="avatar">👵</div>
+      <div class="scan-agent-info">
+        <div class="scan-agent-name">Grandma Ethel</div>
+        <div class="scan-bar-wrap"><div class="scan-bar" id="bar-4"></div></div>
+      </div>
+      <div class="scan-status" id="status-4">Waiting...</div>
+    </div>
+  </div>
+
+  <div class="scan-log" id="scan-log">Initialising critique protocols...</div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+  <div class="results-header">
+    <h2>The Verdict Is In</h2>
+    <div class="results-url-badge">
+      <div class="dot"></div>
+      <span id="results-url-display"></span>
+    </div>
+  </div>
+
+  <div id="cards-container"></div>
+
+  <div class="verdict-card" id="verdict-card">
+    <div class="verdict-label">Overall Portfolio Grade</div>
+    <div class="overall-grade" id="overall-grade-display">—</div>
+    <div class="verdict-text" id="verdict-title"></div>
+    <div class="verdict-sub" id="verdict-sub"></div>
+    <div class="actions">
+      <button class="btn-secondary" onclick="copyRoast()">📋 Copy Roast Report</button>
+      <button class="btn-primary" onclick="resetAll()">🔥 Roast Another</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Roast.Folio — Brutally honest. Occasionally wrong. Always entertaining.</p>
+  <p style="margin-top:8px;">Made with 🔥 and questionable taste. Not liable for career damage.</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const AGENTS = [
+    {
+      name: "Miranda Blackwood",
+      title: "Executive Creative Director, Blackwood & Vance Studio",
+      bio: "28 years of industry experience. Has worked with Pentagram, IDEO, and several agencies in Scandinavia. Strong opinions about kerning. Would fire someone over a bad grid.",
+      avatar: "👩‍💼",
+      gradeBias: -0.5,
+      roasts: [
+        "I've reviewed portfolios from Pentagram, IDEO, and a small agency in Tallinn that operates out of a converted lighthouse. Yours makes the lighthouse agency look overbudgeted. The kerning on your hero alone is a violation of the Lisbon Treaty. As for your case studies — you've told me *what* you made. You haven't told me *why* you made a single decision. I want thinking. This is decoration.",
+        "Bold choice to lead with that project. Bold, in the same way that arriving to a client presentation in cargo shorts is bold. Technically possible. Deeply, deeply questionable. I've seen more considered visual hierarchy in a GDPR consent banner.",
+        "Your 'About Me' section uses the phrase 'passionate about design.' I have seen that sentence approximately forty-seven thousand times. Not once — not once — has it made me feel anything other than mild despair. You're a designer. Show don't tell. This is day one of foundation year.",
+        "The grid is weeping. Dieter Rams would look at this and immediately retire. The type scale has the logic of a ransom note, and you've used three different blue tones without committing to any of them. That's not exploration. That's indecision dressed up as personality.",
+        "There's a version of this portfolio that gets you a Pentagram interview. This is not that version. This is a portfolio that gets you a polite email saying the position has been filled. By someone who charges 30% less and delivers 60% more considered work.",
+        "Ah. Brutalism as an aesthetic choice. Or perhaps you just couldn't decide on a visual direction and called the chaos intentional. I've been in this industry long enough to tell the difference, and unfortunately, so has every creative director worth their day rate."
+      ],
+      compliments: [
+        "The art direction on the third project actually shows genuine restraint. You understood when to stop. That's rarer than people think.",
+        "There's a confidence in your colour usage that suggests you've actually developed a point of view. It's not fully baked, but it's there. Nurture it.",
+        "The typographic choices in your brand project show you've been studying. I see the influence. Keep pushing past it.",
+        "Structurally, your case studies follow a coherent narrative arc. Most portfolios are a pile of screenshots. You've at least attempted to tell a story."
+      ],
+      grades: ["B-", "C+", "C", "D+", "B+", "C-"]
+    },
+    {
+      name: "Chad Kessler",
+      title: "Partner, Accelerate YC — Previously Founder at 3 startups (2 exits, 1 pivot)",
+      bio: "Has funded 140+ companies. Reads 4 books a week. Genuinely believes disruption is a love language. Takes cold showers voluntarily.",
+      avatar: "🚀",
+      gradeBias: -0.3,
+      roasts: [
+        "Okay, cool work. But where are the *metrics*? Where is the business impact? I need numbers. I need conversion lift. I need before-and-after DAUs. You've given me Figma mocks and a vibe board. Vibes don't scale. What was the retention improvement? Don't tell me it 'felt better' — the market doesn't care how it feels.",
+        "Your portfolio itself is a product. And this product has no retention loop. I looked at it, clicked the back button, and immediately forgot what I saw. You need above-the-fold AB testing. You need a hook. You need to treat your own folio like a growth problem. Have you done *any* user testing on this thing?",
+        "I've looked at 3,000 portfolios this year. The ones that get *traction* — the ones that get hired — lead with impact. Dollar amounts. Percentage uplifts. Products that shipped. You've given me your process. Your process is your moat, not your output. Show me you can move a needle.",
+        "The case study format is fine, but you're burying the lede so deep I need a shovel. Lead with the win. What was the business outcome? I shouldn't have to scroll through forty-seven wireframes to discover the feature had 8 users at launch and was deprioritised six weeks later.",
+        "Genuinely don't understand what problem this portfolio solves for me as a hiring manager. What's your positioning? What's your unique insight? You're not differentiated. You look like everyone else who went to a bootcamp and discovered Notion case study templates. Where's the intellectual property?",
+        "I actually like the hustle I sense in this. But execution is scattered. It's like you've got the idea stage but haven't shipped the MVP. This portfolio is technically functional but hasn't found product-market fit yet."
+      ],
+      compliments: [
+        "The third project shows genuine systems thinking. You weren't just making it pretty — you were solving a real problem. I respect that.",
+        "You've actually included some metrics. Most people don't bother. Good instinct — keep making them more specific.",
+        "There's an entrepreneurial energy to how you've positioned your work. You've thought about outcomes, not just deliverables. That's the right frame.",
+        "The way you've documented your process suggests you know how to communicate with non-designers. That's a startup superpower."
+      ],
+      grades: ["B", "C+", "C", "D+", "B-", "A-"]
+    },
+    {
+      name: "Jennifer Park",
+      title: "Senior Design Manager, FAANG (she would very much like you to know it's a top-5 tech company)",
+      bio: "Manages a team of 14 designers across 3 time zones. Has attended more alignment meetings than she cares to quantify. Deeply committed to design systems. Genuinely passionate about accessibility.",
+      avatar: "🏢",
+      gradeBias: -0.2,
+      roasts: [
+        "So — the work is fine. It's fine. But I'm not seeing evidence of cross-functional collaboration. How did you work with engineering? What were the constraints? Did you operate within a design system or did you just freehand everything? I can't tell. At our scale, design is a team sport, not a solo exhibition.",
+        "This reads like solo work, and that worries me. I want to see the messy middle. I want to see the five versions that didn't work and why you moved on from them. Anyone can polish a final mock. Show me iteration, show me pressure testing, show me how you handle feedback from product and engineering at the same time.",
+        "I noticed there's no mention of OKRs, KPIs, or how you measure design success. How do you know if your work was good? Do you have a success metric? Also — and this is a significant red flag — I don't see any mention of accessibility compliance. WCAG 2.1 AA is a baseline, not a stretch goal.",
+        "This portfolio is pleasant. Very pleasant. Very... safe. We ship to billions of users across 190 countries. I need to see evidence that you can operate at scale and in ambiguity simultaneously. Right now I'm seeing high craft and low system thinking. That ratio needs to flip.",
+        "I'm going to give you some feedback and I want you to sit with it: this portfolio tells me what you're capable of in isolation. It doesn't tell me how you make other people around you better. At senior levels, that's the whole job. I'd want to see that.",
+        "The portfolio loading time alone would be a conversation in our performance review culture. Just saying."
+      ],
+      compliments: [
+        "Your process documentation is genuinely thorough. I can see the research, the ideation, the iteration. That's exactly what a design manager wants to see.",
+        "You've shown real range here — you can go from high-level strategy to pixel-level detail. That's a hard skill to develop. It's evident.",
+        "I appreciate that you've included edge cases and error states. Most candidates only show the happy path. You've thought about the full experience.",
+        "The way you describe your stakeholder communication suggests high emotional intelligence. That's table stakes at senior levels, but it's good to see."
+      ],
+      grades: ["B", "B-", "C+", "B+", "C", "A-"]
+    },
+    {
+      name: "Marco Santos",
+      title: "Co-Founder & CEO, Loopify (Series A, $12M raised, 'the Figma of something')",
+      bio: "Raised $2M seed on a napkin sketch. Reads exactly one Twitter thread per day and builds an entire product philosophy around it. Thinks every design problem is ultimately a revenue problem.",
+      avatar: "💸",
+      gradeBias: 0.2,
+      roasts: [
+        "Bro. Okay. First of all: the vibes? Immaculate. Is it slightly chaotic? Sure. But so was the first iPhone. So was Craigslist. So was my co-founder's first pitch deck. The point is: would I hire you? Honestly, I'd need to see how you handle a 2am product pivot when the dev team is in three different time zones. Can this portfolio tell me that? It cannot.",
+        "We're a small team. Everyone does everything. I need a designer who can write copy, build the deck, attend investor calls, and have an opinion on pricing. Looking at this folio I'm thinking: designer, yes. But where's the rest? This is one-dimensional, bro. We need multi-dimensional. We need full-stack creativity.",
+        "Here's the thing about this portfolio: it would have impressed me before our Series A. Pre-product-market-fit me would have hired you immediately. But I've been through two pivots since then and I need someone who can ship in two weeks with zero budget while engineering argues about whether to use React or Next.js. I'm not seeing battle-scars.",
+        "I showed this to our head of growth and he said 'it doesn't convert.' He's not wrong. Your folio is the landing page. Your hire rate is your conversion rate. What's your CTA? Where's the urgency? Why should I reach out TODAY and not in three weeks when I've forgotten you exist?",
+        "The work is solid. Like, genuinely solid. But here's my thing — solid doesn't win markets. Slightly chaotic and obsessively user-focused wins markets. Show me the obsession. Show me the 3am idea. Show me you care SO much about this problem that you can't stop thinking about it.",
+        "My co-founder looked over my shoulder at this and said 'that blue is wrong.' She's our chief design officer. She's usually right. I'm going to defer to her on this one."
+      ],
+      compliments: [
+        "That product case study actually gets it. You've thought about business outcomes, not just design outcomes. That's the mindset I need on my team.",
+        "There's an energy to this portfolio that I like. You're not playing it safe. That matters more than most people admit.",
+        "The way you've framed your work as solving problems — not making pretty things — is exactly the right narrative for any startup environment.",
+        "Your iteration speed looks fast. I can tell from the number of versions you showed. In a startup, that's everything."
+      ],
+      grades: ["B+", "B", "A-", "C+", "B-", "A"]
+    },
+    {
+      name: "Grandma Ethel",
+      title: "Retired Schoolteacher & Enthusiastic Internet User",
+      bio: "Has an iPad. Learned to video call during the pandemic. Thinks all websites should have phone numbers on them. Makes excellent shortbread.",
+      avatar: "👵",
+      gradeBias: 0.8,
+      roasts: [
+        "Oh sweetheart, it's very... dark, isn't it? Why is it so dark? Your cousin Stephanie has a lovely website with a nice floral border and you can tell immediately she sells handmade candles. I couldn't tell what you do, dear. Are you a photographer? A graphic... designer? I told your Uncle Gerald it was 'very modern' and he agreed but neither of us was entirely sure what that meant.",
+        "I tried clicking on the logo to go back to the beginning and nothing happened. Is that supposed to happen? I spent quite a while clicking on it. Also, I didn't realise there was more to scroll down — I thought that was the whole website! You might want to add an arrow or something to let people know. I nearly closed the tab.",
+        "It loaded ever so slowly on my laptop — the one your father got me for Christmas, the silver one — but it did come up eventually. Very modern. Very... grey. A therapist once told your Auntie Brenda that grey is the colour of avoidance. I'm not suggesting anything. I'm just saying. Are you eating enough?",
+        "I showed your website to my friend Margaret from book club. She said it was 'very impressive' but she also thought the little pictures were paintings. I explained that you make them on a computer, which she found fascinating. She's 79. She asked if you could make her a painting of her cat, Biscuit. I told her probably not, but I wasn't certain.",
+        "Your father showed me this and he was very proud. He did ask what a 'UX' was but we decided it was probably something to do with computers. Is that the thing where you make the buttons? He says you're very talented. He's not sure at what, exactly, but very talented. Call him, by the way. He misses you.",
+        "I found a 'contact' button eventually, which was nice. I did think it was going to ring like a telephone. It didn't. It opened an email. I don't really use email so I closed it and made a cup of tea instead. If you put a phone number on there, dear, more people your grandmother's age could hire you. Just a thought."
+      ],
+      compliments: [
+        "The pictures are very nice, dear. Very professional. Like something from a magazine.",
+        "I could read the writing without my glasses, which I appreciate. Good big letters.",
+        "There's a loveliness to it, even if I don't quite understand it all. Your mother would be very proud.",
+        "I liked the little animation at the top. Very clever. How do they make them move like that?"
+      ],
+      grades: ["A", "A-", "B+", "A+", "B+", "A"]
+    }
+  ];
+
+  const GRADE_POINTS = {
+    "A+": 4.3, "A": 4.0, "A-": 3.7,
+    "B+": 3.3, "B": 3.0, "B-": 2.7,
+    "C+": 2.3, "C": 2.0, "C-": 1.7,
+    "D+": 1.3, "D": 1.0, "D-": 0.7,
+    "F": 0.0
+  };
+
+  const SCAN_LOGS = [
+    "Initialising brutal honesty engines...",
+    "Waking Grandma Ethel from her nap...",
+    "Counting your 'passion for design' mentions...",
+    "Auditing kern pairs... oh no...",
+    "Measuring distance between your grid and self-respect...",
+    "Checking if 'About' page has personality... still checking...",
+    "Consulting ghost of Dieter Rams...",
+    "Calculating ratio of Lorem Ipsum to real copy...",
+    "Running vibes analysis...",
+    "Asking Chad if this portfolio has a moat...",
+    "Jennifer is reviewing accessibility compliance...",
+    "Miranda is putting on her reading glasses...",
+    "Marco is on a call but he's glancing over...",
+    "Ethel has located the portfolio tab on her iPad...",
+    "Compiling evidence... preparing roast...",
+    "Final calibrations complete. Brace yourself."
+  ];
+
+  const VERDICTS = {
+    "A": { title: "Genuinely Excellent.", sub: "The panel is, reluctantly, impressed. You've clearly put in the work — and more importantly, you've thought about the right things. Don't let this go to your head.", color: "var(--green)" },
+    "B": { title: "Pretty Solid, Actually.", sub: "More good than bad. You're clearly a capable designer who just needs to push a little harder on the thinking and positioning. The panel sees potential. Use it.", color: "var(--gold)" },
+    "C": { title: "Room to Grow.", sub: "You've got the foundations, but the portfolio isn't working hard enough for you. Tighten the case studies, clarify your narrative, and for the love of all that is holy, update that About page.", color: "var(--orange)" },
+    "D": { title: "We Need to Talk.", sub: "The panel is concerned. There's skill here — somewhere — but it's buried under process shots and platitudes. Start from scratch. Lead with your thinking. Show the work, not the workflow.", color: "var(--red)" },
+    "F": { title: "Have You Considered a New Career?", sub: "Only joking. Mostly. There's a designer in here somewhere, and with radical honesty and an equally radical portfolio overhaul, you might just find them. The panel believes in you. Against their better judgment.", color: "var(--red)" }
+  };
+
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function getGrade(agent) {
+    const grades = agent.grades;
+    return pick(grades);
+  }
+
+  function gradeToClass(grade) {
+    if (grade.startsWith('A')) return 'grade-A';
+    if (grade.startsWith('B')) return 'grade-B';
+    if (grade.startsWith('C')) return 'grade-C';
+    if (grade.startsWith('D')) return 'grade-D';
+    return 'grade-F';
+  }
+
+  function averageGrade(grades) {
+    const points = grades.map(g => GRADE_POINTS[g] || 2.0);
+    const avg = points.reduce((a, b) => a + b, 0) / points.length;
+    if (avg >= 4.0) return "A";
+    if (avg >= 3.5) return "B+";
+    if (avg >= 3.0) return "B";
+    if (avg >= 2.5) return "C+";
+    if (avg >= 2.0) return "C";
+    if (avg >= 1.5) return "D+";
+    if (avg >= 1.0) return "D";
+    return "F";
+  }
+
+  function getLetterVerdict(grade) {
+    if (grade.startsWith('A')) return "A";
+    if (grade.startsWith('B')) return "B";
+    if (grade.startsWith('C')) return "C";
+    if (grade.startsWith('D')) return "D";
+    return "F";
+  }
+
+  function formatUrl(url) {
+    return url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  }
+
+  function getDomain(url) {
+    try {
+      const u = url.startsWith('http') ? url : 'https://' + url;
+      return new URL(u).hostname.replace('www.', '');
+    } catch {
+      return url;
+    }
+  }
+
+  let logIndex = 0;
+  let logInterval;
+
+  async function animateBars() {
+    for (let i = 0; i < 5; i++) {
+      await new Promise(resolve => setTimeout(resolve, 600 + Math.random() * 400));
+      const bar = document.getElementById(`bar-${i}`);
+      const status = document.getElementById(`status-${i}`);
+      status.textContent = 'Analysing...';
+
+      let width = 0;
+      const interval = setInterval(() => {
+        width += Math.random() * 15 + 5;
+        if (width >= 100) {
+          width = 100;
+          clearInterval(interval);
+          status.textContent = 'Done ✓';
+          status.style.color = 'var(--green)';
+        }
+        bar.style.width = width + '%';
+      }, 80);
+
+      await new Promise(resolve => setTimeout(resolve, 1800));
+    }
+  }
+
+  function startRoast() {
+    const input = document.getElementById('url-input');
+    let url = input.value.trim();
+
+    if (!url) {
+      showToast('Please enter a portfolio URL first!');
+      input.focus();
+      return;
+    }
+
+    // Show scanning section
+    document.getElementById('hero').style.display = 'none';
+    document.getElementById('results').style.display = 'none';
+    const scanning = document.getElementById('scanning');
+    scanning.style.display = 'flex';
+    document.getElementById('scan-url-display').textContent = formatUrl(url);
+
+    // Start log rotation
+    const logEl = document.getElementById('scan-log');
+    logIndex = 0;
+    logEl.textContent = SCAN_LOGS[0];
+    logInterval = setInterval(() => {
+      logIndex = (logIndex + 1) % SCAN_LOGS.length;
+      logEl.textContent = SCAN_LOGS[logIndex];
+    }, 1200);
+
+    // Animate bars
+    animateBars();
+
+    // After scanning, show results
+    setTimeout(() => {
+      clearInterval(logInterval);
+      showResults(url);
+    }, 8500);
+  }
+
+  function showResults(url) {
+    const domain = getDomain(url);
+    const scanning = document.getElementById('scanning');
+    scanning.style.display = 'none';
+
+    const results = document.getElementById('results');
+    results.style.display = 'block';
+    document.getElementById('results-url-display').textContent = formatUrl(url);
+
+    const container = document.getElementById('cards-container');
+    container.innerHTML = '';
+
+    const assignedGrades = [];
+    const cardData = [];
+
+    AGENTS.forEach((agent, i) => {
+      const grade = getGrade(agent);
+      const roast = pick(agent.roasts);
+      const compliment = pick(agent.compliments);
+      assignedGrades.push(grade);
+      cardData.push({ agent, grade, roast, compliment });
+    });
+
+    // Build cards
+    cardData.forEach(({ agent, grade, roast, compliment }, i) => {
+      const card = document.createElement('div');
+      card.className = 'agent-card';
+      card.innerHTML = `
+        <div class="agent-card-header">
+          <div class="agent-identity">
+            <div class="agent-avatar">${agent.avatar}</div>
+            <div>
+              <div class="agent-name">${agent.name}</div>
+              <div class="agent-title">${agent.title}</div>
+              <div class="agent-bio">${agent.bio}</div>
+            </div>
+          </div>
+          <div class="grade-badge ${gradeToClass(grade)}">${grade}</div>
+        </div>
+        <div class="agent-card-body">
+          <div class="roast-text">${roast}</div>
+          <div class="compliment-section">
+            <div class="compliment-icon">✦</div>
+            <div class="compliment-text"><strong>But to be fair:</strong> ${compliment}</div>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+
+      setTimeout(() => {
+        card.classList.add('visible');
+      }, 200 + i * 300);
+    });
+
+    // Show overall verdict
+    const overallGrade = averageGrade(assignedGrades);
+    const verdictKey = getLetterVerdict(overallGrade);
+    const verdict = VERDICTS[verdictKey] || VERDICTS["C"];
+
+    const verdictCard = document.getElementById('verdict-card');
+    const overallGradeEl = document.getElementById('overall-grade-display');
+    const verdictTitle = document.getElementById('verdict-title');
+    const verdictSub = document.getElementById('verdict-sub');
+
+    overallGradeEl.textContent = overallGrade;
+    overallGradeEl.style.color = verdict.color;
+    verdictTitle.textContent = verdict.title;
+    verdictSub.textContent = verdict.sub;
+
+    setTimeout(() => {
+      verdictCard.classList.add('visible');
+    }, 200 + 5 * 300 + 400);
+
+    // Scroll to results
+    results.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function resetAll() {
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('scanning').style.display = 'none';
+    document.getElementById('hero').style.display = 'flex';
+    document.getElementById('url-input').value = '';
+    document.getElementById('url-input').focus();
+
+    // Reset verdict card
+    document.getElementById('verdict-card').classList.remove('visible');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copyRoast() {
+    const cards = document.querySelectorAll('.agent-card');
+    let text = `🔥 ROAST MY PORTFOLIO — Panel Report\n`;
+    text += `${'─'.repeat(40)}\n\n`;
+
+    cards.forEach(card => {
+      const name = card.querySelector('.agent-name')?.textContent || '';
+      const title = card.querySelector('.agent-title')?.textContent || '';
+      const grade = card.querySelector('.grade-badge')?.textContent || '';
+      const roast = card.querySelector('.roast-text')?.textContent || '';
+      text += `${name} (${title})\nGrade: ${grade}\n${roast}\n\n`;
+    });
+
+    const overall = document.getElementById('overall-grade-display')?.textContent;
+    const verdictT = document.getElementById('verdict-title')?.textContent;
+    text += `${'─'.repeat(40)}\nOVERALL GRADE: ${overall} — ${verdictT}\n`;
+    text += `Generated at roastfolio.design`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Roast report copied to clipboard ✓');
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+
+  // Allow Enter key
+  document.getElementById('url-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') startRoast();
+  });
+</script>
+
+</body>
+</html>
